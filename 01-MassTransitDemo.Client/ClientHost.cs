@@ -15,8 +15,6 @@ namespace MassTransitDemo.Client
         {
             bus = MassTransit.ServiceBusFactory.New(sb =>
             {
-                sb.EnableMessageTracing();
-
                 sb.UseRabbitMq();
                 sb.ReceiveFrom("rabbitmq://localhost/mtdemo.client");
             });
@@ -28,11 +26,9 @@ namespace MassTransitDemo.Client
             {
                 var messageToSend = new Message { Id = Guid.NewGuid(), Text = message, Index = ++i };
 
-                bus.Publish(messageToSend/*, x => x.SetDeliveryMode(DeliveryMode.Persistent)*/);
+                bus.Publish(messageToSend);
 
                 Console.WriteLine("Mensaje {0} - {1} enviado.", messageToSend.Index, messageToSend.Id);
-
-                Console.WriteLine();
                 Console.Write("Write a message: ");
                 
             }

@@ -16,20 +16,15 @@ namespace MassTransitDemo.Server
 
             bus = MassTransit.ServiceBusFactory.New(sb => {
 
-                sb.EnableMessageTracing();
-
                 sb.UseRabbitMq();
                 sb.ReceiveFrom("rabbitmq://localhost/mtdemo.server");
 
                 sb.Subscribe(x => x.Handler<Message>(message => {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    if (message.Index % 5 == 0)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                    }
+
+                    Console.ForegroundColor = message.Index % 5 == 0 ? ConsoleColor.Red : ConsoleColor.Green;
                     Console.WriteLine("{0}: {1}", message.Index, message.Text);
-                    Console.WriteLine();
                     Console.ResetColor();
+
                 }));
 
             });
